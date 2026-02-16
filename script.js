@@ -349,19 +349,48 @@ function closeModal() {
 }
 
 // ==================== CONTACT FORM ====================
-function handleFormSubmit(e) {
+async function handleFormSubmit(e) {
   e.preventDefault();
 
   const successMsg = document.getElementById('form-success');
-  successMsg.style.display = 'block';
+  const errorMsg = document.getElementById('form-error');
+  const submitBtn = contactForm.querySelector('.submit-btn');
 
-  // Reset form
-  contactForm.reset();
+  // Hide previous messages
+  successMsg.style.display = 'none';
+  errorMsg.style.display = 'none';
 
-  // Hide success message after 4s
-  setTimeout(() => {
-    successMsg.style.display = 'none';
-  }, 4000);
+  // Disable button while sending
+  submitBtn.disabled = true;
+  submitBtn.querySelector('.btn-text').textContent = '⏳ TRANSMITTING...';
+
+  const formData = new FormData(contactForm);
+  const data = Object.fromEntries(formData);
+
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbwv-CBDPHVp-zxWYz7Mz5Yc18b4bBTp3l6zCyHhB2MjIzCwWglQnsr_fBgGxkFPgimm/exec', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      successMsg.style.display = 'block';
+      contactForm.reset();
+      setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
+    } else {
+      errorMsg.style.display = 'block';
+      setTimeout(() => { errorMsg.style.display = 'none'; }, 5000);
+    }
+  } catch (err) {
+    errorMsg.style.display = 'block';
+    setTimeout(() => { errorMsg.style.display = 'none'; }, 5000);
+  }
+
+  // Re-enable button
+  submitBtn.disabled = false;
+  submitBtn.querySelector('.btn-text').textContent = '🚀 DEPLOY MESSAGE';
 }
 
 // ==================== START GAME ====================
