@@ -368,21 +368,17 @@ async function handleFormSubmit(e) {
   const data = Object.fromEntries(formData);
 
   try {
-    const response = await fetch('https://script.google.com/macros/s/AKfycbwv-CBDPHVp-zxWYz7Mz5Yc18b4bBTp3l6zCyHhB2MjIzCwWglQnsr_fBgGxkFPgimm/exec', {
+    await fetch('https://script.google.com/macros/s/AKfycbwv-CBDPHVp-zxWYz7Mz5Yc18b4bBTp3l6zCyHhB2MjIzCwWglQnsr_fBgGxkFPgimm/exec', {
       method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
 
-    const result = await response.json();
-
-    if (result.success) {
-      successMsg.style.display = 'block';
-      contactForm.reset();
-      setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
-    } else {
-      errorMsg.style.display = 'block';
-      setTimeout(() => { errorMsg.style.display = 'none'; }, 5000);
-    }
+    // Google Apps Script redirects response, so we assume success if no network error
+    successMsg.style.display = 'block';
+    contactForm.reset();
+    setTimeout(() => { successMsg.style.display = 'none'; }, 5000);
   } catch (err) {
     errorMsg.style.display = 'block';
     setTimeout(() => { errorMsg.style.display = 'none'; }, 5000);
