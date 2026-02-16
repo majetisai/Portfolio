@@ -1132,6 +1132,19 @@ a:hover { color: var(--neon-purple); }
   animation: fade-in 0.5s ease;
 }
 
+.form-error {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--neon-pink);
+  text-shadow: 0 0 10px rgba(255, 107, 202, 0.4);
+  animation: fade-in 0.5s ease;
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 @keyframes fade-in {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
